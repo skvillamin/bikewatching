@@ -1,36 +1,91 @@
-html, body {
-    margin: 0;
-    padding: 5;
-    height: 100%;
-    width: 100%;
-    display: flex;
-    justify-content: center; /* Center horizontally */
-    align-items: center;     /* Center vertically */
-  }
-     
-#map {
-    width: 100%;    /* Adjust width to your desired size */
-    height: 100%;   /* Adjust height to your desired size */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow for effect */
-    border-radius: 8px; /* Optional: rounded corners */
-  }
- 
-#map svg {
-    position: absolute;
-    z-index: 1;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-  }
-
-#map circle{
-    fill-opacity: 60%;
-    stroke: rgb(123, 191, 123);
-    fill: rgb(123, 191, 123);
-    pointer-events: auto;
-}
-
-#map circle:hover{
-    fill-opacity: 1;
-    stroke-width: 2px;
-}
+   #map circle,
+   .legend > div {
+     --color-departures: navy;
+     --color-arrivals: orange;
+     --color: color-mix(
+       in oklch,
+       var(--color-departures) calc(100% * var(--departure-ratio)),
+       var(--color-arrivals)
+     );
+   }
+   
+   /* Existing map styles */
+   html, body {
+     margin: 0;
+     padding: 5;
+     height: 100%;
+     width: 100%;
+     display: flex;
+     justify-content: center; /* Center horizontally */
+     align-items: center;     /* Center vertically */
+   }
+   
+   #map {
+     width: 100%;    /* Adjust width to your desired size */
+     height: 100%;   /* Adjust height to your desired size */
+     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: subtle shadow for effect */
+     border-radius: 8px; /* Optional: rounded corners */
+     position: relative; /* So we can position .legend absolutely if we want */
+   }
+   
+   #map svg {
+     position: absolute;
+     z-index: 1;
+     width: 100%;
+     height: 100%;
+     pointer-events: none;
+   }
+   
+   #map circle {
+     fill-opacity: 60%;
+     stroke: white;
+     fill: var(--color);
+     pointer-events: auto;
+   }
+   
+   #map circle:hover {
+     fill-opacity: 1;
+     stroke-width: 2px;
+   }
+   
+   /* Legend styles */
+   .legend {
+     display: flex;
+     align-items: center;
+     gap: 1rem;           /* Larger gap between legend items */
+     margin-block: 1rem;  /* Spacing from the map */
+     /* Optional: position the legend over the map, if desired:
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        background: white;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+     */
+   }
+   
+   .legend::before {
+     content: "Legend:";
+     margin-inline-end: 0.5rem; /* Space after the label */
+     font-weight: bold;
+   }
+   
+   /* Each legend item also uses flex to keep the swatch and text close */
+   .legend > div {
+     display: flex;
+     gap: 0.25rem; /* Smaller gap between swatch and text than between items */
+     align-items: center;
+     /* Inherit the --color variable and use it for the swatch in ::before */
+   }
+   
+   /* Create the colored swatch using ::before */
+   .legend > div::before {
+     content: "";
+     display: inline-block;
+     width: 1em;
+     height: 1em;
+     border-radius: 50%;    /* Make it circular; remove if you want a square */
+     background-color: var(--color);
+   }
+   
